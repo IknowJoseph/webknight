@@ -1,0 +1,46 @@
+TO DO WebKnight Installer
+=========================
+- bootstrap (setup.exe)
+- install dialog IIS/ISA/TMG
+- backup script access denied when username does not have correct NTFS permissions
+
+2018.01.21 - Created wizard.vbs for adding configuration wizard to WebKnight.xml file
+2016.11.07 - Fixed NTFS permission for current user (LogonUser instead of USERNAME)
+2015.12.21 - Fixed LaunchCondition not working for IIS 10 ("#10" < "#7"!!!)
+2015.07.01 - created UpdateMSI.js for updating MSI file sizes
+2015.02.05 - backup/upgrade application pool specific configuration files
+2015.02.01 - Fixed install.vbs unattended setup (HostNameDefault not defined)
+	- installer remove Loaded.xml when uninstalling (RemoveFile table)
+2015.01.31 - Added optional application launch (config utility) when install finished and removed msgbox from install script (for /qn setups)
+	http://stackoverflow.com/questions/1668274/run-exe-after-msi-installation
+2014.09.20 - read 64-bit registry keys instead of Wow6432Node (RegLocator table 64bit attribute) for 3.x installer issue on W2K8 84-bit (no issue on R2)
+2013.07.31 - upgrade of WebKnight.xml settings
+2013.03.31	- install WebKnight as an ISAPI extension in IIS7 for raw data filtering (also during upgrade from 2.x)
+                     - added bitness conditions in 64-bit setup + install 32-bit WebKnight for application pools running in 32-bit
+                     - added IUSR in NTFS permissions (for default.asp)
+	- added iniFile table for shortcut to admin url /WebKnight/
+2012.11.29 - IIS 7+ check if ISAPI filters is installed
+	- 4 tables added: LaunchCondition, AppSearch, RegLocator, Signature
+	- LaunchCondition AFTER AppSearch in execute sequence (2x)
+2010.12.28 - IIS reset: Added ServiceControl table with entry for IIS reset
+
+Deferred install (SYSTEM account) (2010.12.28)
+---------------------------------
+problem IIS7.5 access denied on %SystemRoot%\System32\inetsrv
++ set NTFS permissions NETWORK SERVICE / IIS_IUSRS
+http://go.microsoft.com/fwlink/?LinkId=113664
+
+vbscript custom action:
+	- type: 3078 (6 + 1024 + 2048)
+	- installsequence < InstallFinalize (< 6600)
+	- http://www.installshield.com/news/newsletter/0308-articles/CustomActionData.asp
+
+64bit msi package (2008)
+-----------------
+http://msdn.microsoft.com/en-us/library/aa372396%28v=VS.85%29.aspx
+- change ProgramFilesFolder to ProgramFiles64Folder (2x)
+- component table set attributes to 256 (msidbComponentAttributes64bit)
+- summary information: 
+	Platform: x64
+	schema: 310
+	new GUID

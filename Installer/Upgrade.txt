@@ -1,0 +1,25 @@
+When releasing a new version
+---------------------------------------------
+new version of 
+	WebKnight.xml + run wizard.vbs
+	Robots.xml: export Robots.xml without IP addresses (daily export is with IP addresses)
+
+ISAInstall.vbs/ISAUninstall.vbs
+	change FilterVersion
+
+copyright year in default.asp, readme.htm
+
+Package
+	Control -> license agreement text
+	File -> versions and sizes
+	Property -> version numbers + Productcode new GUID
+	Upgrade -> version numbers
+	Summary Information -> New GUID
+
+sign
+
+Also update productversion check on website + copy new WebKnight.xml in /manual/
+
+publish release package + changelog on website
+
+paypal GUID + redirect.asp
