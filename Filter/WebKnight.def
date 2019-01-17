@@ -1,0 +1,11 @@
+; WEBKNIGHT.def : declares the module parameters for the DLL.
+
+LIBRARY	     "WEBKNIGHT"
+
+EXPORTS
+	HttpFilterProc
+	GetFilterVersion
+	HttpExtensionProc
+	GetExtensionVersion
+	TerminateExtension
+	RegisterModule

@@ -1,0 +1,589 @@
+WebKnight 4.6.2 (2018.05.17)
+---------------
+- FIX: web admin was not accessible on Windows 10
+- FEAT: Excluded referrer url for Yahoo search results and Google doubleclick referrers
+- FIX: bug in multipart/form-data validation scanning. Value included CRLF of next boundary.
+- FIX: two bugs in multipart header parsing that could be used to bypass scanning
+- FEAT: detect boundary mismatch in multipart content type
+- FEAT: scan multipart/form-data for forms authentication
+- FEAT: scan application/wrml and application/yaml responses for information disclosure
+- FEAT: when upgrading WebKnight.xml, add notifications to file for GUI
+- Robots.xml: added type Mail Clients
+- new log analysis with fix for separator reset when filtering
+
+WebKnight 4.6.1 (2018.02.04)
+---------------
+- FEAT: scan multipart/form-data for parameter pollution, input validation and name require regex
+- FIX: empty content type scan variable length also as text/plain
+- FIX: Decode ASCII in uppercase unicode format (%U00xx) now supported
+- Web Applications
+	- FIX: RPC over HTTP disable Post RFC compliant check
+- Admin
+	- FEAT: Basic Authentication
+	- FEAT: Unblock a single IP address
+	- FIX: /WebKnight/ url excluded from parameter input validation
+	- FIX: editing WebKnight.xml was blocked because content-length>49152 (bug was introduced in 4.6)
+	- Added IP Ranges page in Home and moved Clear Cache from Settings to Home
+- new config utility with wizard for first time configuration and navigation bar
+- new log analysis utility with url decode and base64 decode
+
+WebKnight 4.6 (2017.11.08)
+---------------
+- FEAT: Limit content length based on content type
+- FEAT: Denied content-types enabled and filled list with bad ones seen in the wild
+- FEAT: Detect url parsing errors
+- FEAT: Added Denied Referrers
+- FEAT: check for payload RFC compliancy (x-www-form-urlencoded mismatch and missing content length and missing content type)
+- FEAT: scan application/x-www-UTF8-encoded entities for invalid UTF-8
+- FEAT: application/yaml and application/wrml messages also scanned for SQLi and directory traversal
+- FIX: Added encoding="windows-1252" for XML settings (for blocking ¼script)
+- FEAT: no longer using Error.log when log file already in use, but use separate log file for that WebKnight instance
+- Set Max HTTP version length to 8 instead of 15
+- Signatures for:
+	- tilde in path and requested file (short filename enumeration and DoS): 
+	  http://soroush.secproject.com/downloadable/microsoft_iis_tilde_character_vulnerability_feature.pdf
+	- downloading of certificate files that might contain private keys
+	- certain awk exploits and perl/ruby reverse shells
+	- ruby YAML code execution exploit
+	- error pages information disclosure
+
+WebKnight 4.5.5 (2017.01.17)
+---------------
+- FIX: Multipart boundary parsing was incorrect (bug was introduced in 4.5.4)
+- FIX: RemoveRedundantWhitespace also removed ASCII>127
+- FIX: Improved performance of scanning Max Content Length and moved to section Content Type
+- FIX: User Agent scanning is skipped for HTTP/0.9 requests
+- FIX: Improved compatibility with Microsoft Exchange ActiveSync
+- Robots.xml
+	- Added possibility to block SEO tools and services (new robots type: SEO)
+	- Removed type: Device
+- Admin
+	- moved statistics to separate page (no longer on dashboard)
+	- GUI.xsl uses label for checkbox
+
+WebKnight 4.5.4 (2016.12.18)
+---------------
+- FIX: Improved performance of SQLi scanning and fixed DoS issue
+	Thanks to Ken De Moor for reporting the issue.
+- FIX: bypass SQLi scanning by using undocumented concat SQL syntax (works on SQL Server and MS Access)
+- FIX: Improved compatibility with Team Foundation Server
+- FIX: installer adds current user to NTFS permissions
+
+WebKnight 4.5.3 (2016.09.26)
+---------------
+- FIX: isapi extension corrupted file uploads when embedded nulls in first 48K (bug was introduced in 4.5)
+- Web applications should not be applied when upgrading settings file
+
+WebKnight 4.5.2 (2016.09.17)
+---------------
+- Disabled Secure Cookie as it merges multiple Set-Cookie response headers
+- FIX: OnUrlMap IIS 8 race condition when already blocked in OnPreprocHeaders by skipping OnUrlMap when blocked in OnPreprocHeaders
+
+WebKnight 4.5.1 (2016.06.01)
+---------------
+- FIX: isapi extension was not passing through data beyond 48K to further processors (bug was introduced in 4.5)
+- FIX: ScanEntity did not correctly parse boundary in multipart content types
+- FIX: made configuration file shorter than 32767 pixels for CScrollView issue (not all Web Applications settings were shown in 4.5)
+- FIX: Runtime detection of config changes did not always work (bug was introduced in 4.5)
+
+WebKnight 4.5 (2016.04.05)
+-------------
+- Improved signatures from Howest Honeypot Project 2015
+	- SQLi: remove whitespace around '&' operator before scanning and added more keywords
+	- SQLi: remove multiple '+' concats (works on MS Access and SQL Server)
+	- Added some XSS and malicious html keywords
+	- Fixed XSS regex patterns to avoid bypassing and DoS (patterns were new in 4.4)
+	Special thanks to: Dieter Tinel, Steven Verscheure, Wouter Bloeyaert, Mathias De Weerdt, Matthias Meersseman and all other students!
+- SQLi: add space before # comment
+- FIX: WebSocket protocol upgrade conflicted with OnSendRawData
+- FEAT: Added support for reading third-party blocklists (Tor exit node list...)
+- FIX: ISAPI Extension processing all post data
+- FIX: ScanEntity parses all multipart types instead of just multipart/form-data
+- FIX: IIS 6 response headers were not adjusted when response headers are sent in same chunk as image.
+- FIX: Denied content types are now case insensitive
+- FEAT: Scan Transfer-Encoding header
+- FIX: Parameter validation value extraction removed '=' character from parameter values
+- FIX: Parameter name validation rule was triggered for non-parameter querystring
+- FIX: Hot linking: allow relative referrer urls
+- FIX: Created CSandboxFile for CFile sandbox issue
+  	_AfxFullPath2 threw exception because GetVolumeInformation failed when no access on root of drive.
+  	In WebKnight 2.1, sandbox mode worked, because that one was compiled with VS6 filecore.cpp version ignoring AfxFullPath errors
+- FEAT: add HttpOnly and Secure attribute in Cookie
+- FIX: ping.exe was twice in the list of denied files
+- FIX: Microsoft Edge fragment in referrer issue
+- New signatures for detecting:
+	- HttpForbiddenHandler requests
+- Information Disclosure: 
+	- added new payment cards and changed existing regex patterns to reduce false positives
+- Admin:
+	- FIX: default.asp content-type not sent to browsers
+	- FIX: Chrome would display settings as plain text instead of html (bug was introduced in WebKnight 4.4)
+	- FIX: settings form submit working in combination with IIS module interface
+- FIX: Installer launch conditions were skipped for IIS 10
+- Web Applications:
+	- Allow Paypal IPN
+
+WebKnight 4.4 (2015.11.11)
+-------------
+- FEAT: Ability to add validators for web applications
+ 	- You can add input validation rules to the query/post/cookie parameters
+	- Parameter name require regex
+- Added additional keywords and regex patterns for detecting:
+	- malicious html (based on http://html5sec.org/)
+	- remote file inclusion
+	- OS commands
+	- web shells
+	- downloading archive files in root of website
+	- More javascript. Thanks to Ashar Javed (@soaj1664ashar) for reporting these additional keywords and suggesting improvements.
+	- XSS with unusual DOM events
+	- XSS media events (see: https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet)
+- Host header scanning:
+	- Moved RFC compliant host header and excluded host headers to separate section in settings.
+	- Added Allowed/Denied Hosts.
+	- Only allow access from loopback to localhost.
+	- Protection against invalid hostnames and worm propagation (on IP address). See regexes in Headers section.
+- Referrer url:
+	- FEAT: Added allowed starts
+	- FIX: Correctly detects about:blank as a blank referrer
+	- FEAT: Moved Hot Linking to separate section + also scanned when referrer scanning is disabled
+	- FIX: Referrer querystring is also scanned for SQLi/encoding exploits...
+- Moved excluded IP addresses to connection section in settings.
+- FIX: RFC compliance: added check for backtick character in url
+- FEAT: User Agent: deny current date
+- FEAT: Encoding exploits
+	- Detect various encoding exploits with regex patterns
+	- Detect invalid UTF-8 sequences
+- FEAT: Improved SQL injection scanning
+	- Added more keywords based on SQLMap tamper scripts
+	- Added more keywords based on OWASP Advanced SQL injection
+	- More whitespace cleanup (all ascii characters <=15 and around dot and plus sign)
+	- Normalize whitespace: add space before /* and after */ (for keyword detection in select/**/*/**/from/**/)
+	- Replace true/false with 1
+- FIX: Deny special whitespace also scans for form feed character + fixed atlrx.h for FF and VT characters
+- FIX: Parameter pollution scanning
+	- Case insensitive comparison for forms authentication and parameter pollution scanning
+	- Cookie remove leading spaces
+	- PHP compatible by replacing reserved characters to underscores and removing leading whitespace when Allow PHP is enabled
+- Admin: code review refactoring and added X-Frame-Options...
+
+WebKnight 4.3 (2015.10.07)
+-------------
+- Added a lot of new keywords for scanning PHP exploits, RFI...
+- FEAT: RFC compliance check - HTTP url cannot contain fragment when sent to server
+- FEAT: Deny payloads (entity body) for GET/HEAD/TRACE/DELETE requests
+- FEAT: Improved SQL injection scanning
+	- added new keywords, special thanks to Khalil Bijjou for reporting two bypasses and suggesting additional keywords
+	- remove redundant whitespace before scanning
+	- replace numeric values with 1 and scan again
+	- scan User-Agent header for SQLi
+- FIX: OnUrlMap race condition between IIS 8.x and WebKnight that resulted in stack overflow
+- FIX: Partial content issue with mp3 and mp4 files (not playing in Chrome and IE)
+- FIX: Module passthrough post data to other modules
+- FIX: application/json and application/soap+xml scanning
+	- WebKnight 4.2 treated this as binary in request (was no longer scanned for sqli, shellcode, directory traversal)
+	- scanned for information dislosure in response
+- FIX: ISAPI filter authentication notification can be disabled for global.asax integrated pipeline conflict (IIS 7.x).
+  (See KB 2605401 for more information.)
+- FEAT: logging (sensitive) postdata can be disabled and moved postdata settings to separate "Post" section in configuration file.
+- Added new XSS keywords:
+	- animations (animation...), touch (ontouch...), devices (ondevice...)
+  	- transitionend, onopen, onwheel, onuserproximity, onlanguagechange
+	- html-encoded "javascript:"
+	- expression(
+- FEAT: Prevent parameter pollution in querystring/postdata/cookie.
+- FEAT: Scan Forms Authentication - Form submissions are now scanned by ScanAuthentication() (brute force attacks...)
+- Web Applications
+	- Allow JSON
+	- Allow REST
+	- Improved TFS compatibility
+
+WebKnight 4.2 (2015.07.01)
+-------------
+- Added XSS keywords: ontoggle and onshow. Special thanks to Mazin Ahmed for reporting this.
+- FEAT: Added version number to settings file for future upgrade paths
+- Added /fckeditor to denied url sequences
+- FIX: response headers were not adjusted (in IIS 7 and later) when response headers are sent in same chunk as image.
+- FIX: response redirect was not working (on IIS 7 and later) when alert was triggered in multiple events (a Location header was added for each event).
+- FIX: avoid isapi extension request execution with IIS 7 (and later) when alert was triggered in OnUrlMap by returning SF_STATUS_REQ_ERROR
+- FIX: OnSendRawData skip sending alert headers when other headers were already sent to client
+- Changed postdata scanning to generate fewer false positives
+	- ScanEntity instead of ScanRawData to scan each entity separately when using multipart/form-data
+	- scan variable length only when url encoded or plain text entity
+	- scan encoding exploits/sqli/parent path/variable length by default enabled
+- Module for scanning POST data for ARR compatibility (ISAPI extension too late in pipeline)
+- ISAPI extension:
+	- only scan data when not empty
+	- FIX: no longer using HSE_STATUS_SUCCESS_AND_KEEP_CONN
+	- incident response -> drop connection now working
+	- FIX: SF_STATUS_REQ_ERROR is returned so our isapi extension no longer executes request when blocked in OnUrlMap (IIS 8 issue)
+	- FIX: OnUrlMap alert would not be displayed in IIS 8.x when extension was installed
+- Web Applications
+	- Allow ASP.NET MVC
+	- Removed FlashMX (wasn't used)
+
+WebKnight 4.1 (2015.02.05)
+-------------
+- FIX: error message was not reported when opening log file failed
+	-> AfxSetResourceHandle is now called at startup
+- Added HTTP2-Settings in MaxHeaders
+- FIX: Maximum Length settings (for Content-Length,URL,QueryString,HTTPversion) were not loaded correctly from the new config file format
+- FIX: Clear MaxHeaders and InformationDisclosure when loading defaults
+- FIX: Character rules were always blocking the request when enabled (even if monitoring was selected)
+- Added bitsadmin.exe, powershell.exe, wmic.exe detection (thanks to Joe McCray for reporting this on youtube :-))
+- Added cscript.exe, wscript.exe and web.config detection
+- Added .vbe and cmdlet extensions to denied extensions
+- Added SQL keywords: || and && and (stored xss:) char(60), char(62)
+- FIX: replace null by space when hex decoding (to prevent bypass when encoding exploit detection is disabled)
+	-> this prevents bypassing WebKnight with the apostrophenullencode tamper script in sqlmap (was only successful when encoding exploits was disabled)
+- FIX: major issue in unicode decoding that could bypass WebKnight scanning (bug that was introduced in WebKnight 2.4)
+- Improved encoding exploit detection and added C-style literals: \o00, \x00, \u0000 and \U00000000
+- Decode ASCII in unicode format (%u00xx) now supported
+- FEAT: Excluded User-Agents
+- Installer
+	- Unattended setup /qn supported
+	- Optionally launch configuration utility at end of setup
+	- Backup/Upgrade WebKnight.yoursite.xml config files supported (yoursite = application pool identity)
+- ADMIN
+	- Information messages are now shown in admin
+	- Logging status is now shown
+
+WebKnight 4.0 (2014.11.11)
+-------------
+- Changed rules to multiple states instead of just on/off. When a rule is enabled, it can have a custom response action (block/monitor/block IP/monitor IP).
+- moved Max Querystring/URL to Querystring/URL section instead of Request Limits
+- Max Referer length is now 4095 instead of 1024
+- Added more default/most used passwords based on most used passwords of 2013
+- Fixed ISA 2004 incompatibility. WebKnight 3.0 and later were being unloaded because it reported a higher ISAPI filter version than ISA 2004.
+- Fixed WebKnight 3.x 64-bit installer issue on W2K8 (R2 does not have this issue). Also repackaged 3.2 with this fix.
+- ScanVariableLength is now skipped if total length of data is smaller than max allowed length
+
+WebKnight 3.2 (2014.04.07)
+-------------
+- RPC over HTTP allow slow post + 1 GB content length
+- FIX: empty url issue in OnUrlMap (now null + empty instead of only null)
+- FIX: Allow content length header sizes of more than 9 characters
+- FIX: PDF partial content inline viewer fixed
+- FIX: files larger than 256MiB download resulted in internal server error (bug in IIS 7.x)
+- Response Monitor - Client/Server Errors: status is now logged
+- FEAT: Added ability to add/change/remove response headers and not just Server header
+and added common response header to prevent XSS/clickjacking
+- Admin:
+	IP_Authentication no longer shows passwords
+- FEAT: SQL injection - added Allowed Count in settings
+- FIX: Deny SQL injection in headers was too restrictive by default (Accept: */* was blocked)
+- if an alert is triggered in log only mode, the log will show ALERT instead of BLOCKED
+- FIX: XSS - added new keywords reported by Rafay Baloch
+- FIX: XSS - removed trailing '=' in javascript events to prevent xss attacks like "onload ="
+- FIX: Syslog also IPv6 ready
+- Update robots.xml now also possible from admin homepage
+- Added "::1" to excluded IP addresses
+- Added "X-Forwarded-For:" in MaxHeaders
+- Added HTTP/2.0 in allowed versions for upcoming version of HTTP
+- Changed maximum size of XML settings files
+
+WebKnight 3.1 (2013.07.31)
+-------------
+- FEAT: Change IIS/ISA/TMG logging
+	- correct HTTP status code when alert triggered
+	- possibility to change c-ip with X-Forwarded-For or similar header
+- FIX: Hot linking use host header only worked when on the standard port 80
+- Added max lengths for some non-standard "UA-..." headers and "DNT:" (do not track)
+- FIX: subsequent response writes were not checked for information disclosure
+- Removed // from Denied Url, because it also blocks http:// url requests (HTTP 1.1 proxy)
+- Also log request info (url...) in OnPassThrough event
+- FIX: Extension requests limit now also works in Forefront TMG/ISA Server... (OnPreprocHeaders)
+- FEAT: added URL requests limit to help combat DDoS attacks on a particular URL
+- FEAT: IPv6 ready
+- FEAT: Added Team Foundation Server compatibility settings
+- FIX: SOAP also allow content-type 'application/soap+xml'
+- FIX: empty url issue in OnUrlMap
+- on startup process owner username is also logged for diagnostics
+- Updated config.exe utility - lists are now sortable
+- Admin:
+	- FIX: admin interface was not working on IIS 8 when isapi extension was installed
+	- Help menu with Readme, FAQ, Support and "Check for updates"
+	- Avoid CSRF on admin
+	- Added Diagnostics (echo request + server variables + intercept traffic from an IP)
+	- account used + process + loaded settings file is shown on Home
+	- FEAT: IP ranges also supported in From IP + not excluded when admin is disabled
+	- Regex patterns are now collapsible table
+	- FIX: "force" parameter was not working in updating settings (for reload settings)
+	- FIX: installs correct dynamic robots file from settings
+- Installer:
+	- FEAT: Upgrade WebKnight.xml settings after installing to newer version of WebKnight
+	- FIX: ISAinstall.vbs now tries to detect the path to Forefront TMG / ISA Server
+	- FIX: issue with IIS 7 installer script (resulted in incomplete registration + uninstall not possible), also repackaged 3.0 with this fix
+
+WebKnight 3.0 (2013.04.04)
+-------------
+- FIX: Allow renaming WebKnight.dll to something else, now correct module path is used
+- FEAT: per process owner settings possible like WebKnight.yoursite.xml (uses application pool identity)
+- FEAT: Added ISAPI Extension for POST data filtering in IIS 6 and later  (IIS 6: manual installation required, IIS 7 done during setup)
+- removed usage of old MFC ISAPI library <afxisapi.h>
+- FEAT: Deny Special Whitespace rule added
+- FEAT: User-Agent - Deny High Bit Shellcode
+- FEAT: Block too many different User-Agent headers from an IP address in a certain time period
+- Set Max HTTP version length to 15 instead of 22
+- FEAT: Added Excluded Host Headers to exclude certain web sites from being scanned (for TMG published site)
+- FEAT: /WebKnight/ admin page (for localhost only)
+	- Added alert statistics
+	- Added default.asp for editing XML configuration files
+	- Added reference to XSLT (GUI.xsl) in settings
+	- Settings parsing attribute separator(" or ') now equals separator that started value like in XMLConfig
+- FIX: Deny Information Disclosure was always enabled (new in 2.5)
+- Installer
+	- added prerequisite for ISAPI Filters/Extensions in IIS 7 and later
+	- also install 32-bit version for 32-bit applications on 64-bit IIS 7 and later
+- FEAT: Log file name format can be changed in settings
+- Added some more SQL injection keywords
+- Added URL denied sequences: // and /./
+
+WebKnight 2.5 (2012.11.18)
+-------------
+- FEAT: Added excluded urls/querystrings like UrlScan's AlwaysAllowedUrls and AlwaysAllowedQueryStrings
+- FEAT: Regular expression filtering for URL, querystring, headers, postdata
+- FEAT: Added Response Monitor section in settings
+	- PCI compliance: credit card number leakage detection
+	- Blacklist IP if a certain amount of client or server errors occur
+- FEAT: Block slow header/post attacks
+- Added new WebSocket headers (RFC 6455) and blocked by default
+- FIX: Incident response handling - block IP wasn't working in 2.4
+- FIX: Parsing certain IP addresses generated stack corruption
+- FIX: Windows 2000 syslog incompatibility
+- uses now last X-Forwarded-For as the client IP address if multiple headers are present
+- Improved ISA/TMG support
+	- Added IsInstalledInWebProxy compatibility setting in global filter capabilities to register for OnReadRawData
+	- No longer registering for OnUrlMap event notification
+	- ForeFront TMG 2010 incident response handling incompatibility (no longer using MFC CHttpFilterContext)
+	- filter now flags the SF_NOTIFY_FLAG_LARGE_SIZE_AWARE for Forefront TMG >4GB limitation
+- FEAT: dynamic robots.txt for cloaking
+- FIX: OnSendRawData gives error on IIS 7 when downloading files larger than 256MB
+	-> disable event notification when all settings in response monitor are unchecked
+- on startup now ISAPI version of IIS/ISA/TMG and process info is logged
+- FIX: minor bug in logging 2 entries if logging allowed + already flushed (monitored IP)
+- FEAT: Added url list to protect from being hotlinked. This blocks CSRF on those urls.
+- Added additional Javascript events for XSS detection + prevent style tag injection
+- Added new robots type: Translation
+
+WebKnight 2.4 (2010.12.29)
+-------------
+- Added Syslog
+- Updated LogAnalysis
+	- bugfixes + sort column now possible
+- Major BUGFIX: URL decode should ignore % sign if not followed by valid hex (could be used to bypass scanning)
+- Added Deny Multiple Colons (':') in path for requests like /file/http://test
+- Installer
+	- BUGFIX: no longer required to have access to inetsrv\config folder
+	- Set NTFS permissions for current user/NETWORK SERVICE/IIS_IUSRS on WebKnight folder
+	- restart IIS during setup
+- Applications compatibility
+	- WinRM + by default denied access to /powershell
+- Changed BlockIP to blacklist: now able to specify the number of alerts in a certain time span before blocking an IP address
+
+WebKnight 2.3 (2010.04.03)
+-------------
+- Logging
+	- Per process logging no longer in subfolder but processid is in the filename
+	- Added per process owner logging for IIS 7.5 and multiple application pools
+	- Added error message logging (Error.log) if access to log file is denied
+- Added ClientIPVariable for support for reverse proxy/CDN instead of always using REMOTE_ADDR
+- Added generic data/querystring/cookie variable + header maximum length scanning
+- Added ripping protection of certain file extensions (like jpg,exe...)
+- Added M-SEARCH to denied methods (UPNP)
+- Adding comments to IP ranges is now possible: "127.0.0.1 //localhost"
+- fixed minor bug in XML settings: 'Denied Content Types' instead of 'Deny Content Types'
+- Added compatibility with
+	- Office Sharepoint Server 2007
+	- Virtual Server 2005
+- Changed maximum length of "Authorization:" header 4000 -> 5120 for Kerberos
+- Changed maximum length of "User-Agent:" header 256 -> 320
+- HackResponse no longer sends message body in HEAD request (only in OnPreprocHeaders())
+- Removed .axd file from denied sequences (too much used by ASP.NET websites)
+- Added /xmlrpc. to the list of blocked urls
+- IPv6: Adjusted CIPAddress class to template
+- SQL Injection
+	- now logs which keywords are found
+	- Added SQL Keywords: dbo. ; master.. ; @@version ; @@servername ; @@servicename ; @@fetch_status ; db_name ; db_id ; is_member ; is_srvrolemember ; object_id ; object_name ; col_length ; col_name ; syscolumns ; sysname ; system_user ; quotename ; isnull ; xtype ; varchar ; char(9) ; char(94) ; char(32) ; char(85) ; cursor ; sp_configure ; backup ; /* ; */ ; information_schema
+
+WebKnight 2.2 (2008.09.02)
+-------------
+- First 64bit and IIS7 release (adjusted installer scripts to use new IIS7 API instead of metabase)
+- Disabled registering for OnReadRawData event on IIS7 and later
+- Added Denied Content-Types
+- Frontpage 2008 (and previous) uses empty url in OnUrlMap
+- Added logging of "Host:" header
+- Now also logs ASP.NET error response body (ASP classic used querystring for error number)
+- Updated default keywords
+	Url: /siteadmin
+	Querystring: c:\
+	Filename: .aspx. ; .asa. ; .asax. ; backdoor ; admin.pw ; test.cgi -> test.
+	Extensions: .old ; .backup ; .000 ; .asp~ ; .dbf & .dbx -> .db ;
+	SQL injection: char(124) ; cast( ; fetch next ; allocate ; MySQL string escape character ;  =!(  
+- Referrer scan
+	- Extended with DenySQLInjection
+- Cookie scan
+	- Extended with DenyHighBitShellCode, DenyDirectoryTraversal, DenySequences
+	- Fixed bug with scanning for SQL injection: make lowercase
+- Added blocking/monitoring of IP address if alert (response handling)
+- Added IP range format 10.0.0.1-10.0.0.2
+- Blocked certain query string/postdata injection attacks
+	- http:// injection
+	- php script injection (<?php)
+
+WebKnight 2.1 (2007.10.08)
+-------------
+- Fixed major bug where CString MakeLower() & MakeUpper() would throw an exception on Korean systems (GetLastError: 1113)
+- Added filtering exclusion based on IP address/range
+- Fixed bug when logging in local timezone, time field would still log in GMT (this bug was introduced in version 2.0)
+- Fixed bug where IP addresses from Robots.xml would not get blocked when WebKnight loads (moved LoadCache after LoadAgents)
+- ScanRawUrl() log url even when URL.UseRawScan is disabled for raw filename scanning
+- added RFC compliancy for multiple User-Agent headers in request (Google Translate uses this)
+- added log warning to entry when hot linking with missing 'Host:' header
+
+WebKnight 2.0 (2006.12.24)
+-------------
+- Fixed major bug in OnSendRawData involving IIS 6 and binary files with embedded nulls (like images)
+- Added HTTP/0.9 version (IIS6 reports no version as HTTP/0.9)
+- Enabled run-time update in SaveDefaultSettingFile()
+- Added check for %u0000 in ScanHexEncodingAbuse()
+- Added default *nix command line hack tools to denied url/querystring
+- Added Referer URL scanning
+- Added SQL keyword "--" and added trailing spaces to some keywords (reduce false positives)
+- Changed Denied CGI application "ping" to "ping.exe" (false positives: shopping)
+- Web Applications
+  - Added SOAP for improved ASP.NET support + blocked "SOAPAction:" header by default + set max length
+  - Added FileUpload
+  - Added Unicode
+  - Added Internet Printing Protocol
+  - Added BITS (also blocked BITS headers/verbs by default + set max lengths for headers)
+  - Fixed not reading settings Allow_Web_Applications_SharePoint...
+  - Improved compatibility with FrontPage: allow Content-Type "application/x-vermeer-urlencoded"
+  - Improved compatibility with ColdFusion: allow Content-Type "application/x-ColdFusion"
+- Added Date to each log entry (for ODBC logging)
+- Major code review (optimizations in code management / performance)
+  - Created CStringHelper, CExploitScan, CFirewall, CHTTPFirewall, CISAPIFilter, CISAPIFirewall classes
+  - fixed lowercase/uppercase issues with settings (lists)
+  - Created CHTTPFirewallSettings class
+- Blocked cookie ASP exploit with invalid cookie "Cookie: ="
+- blocked script injection with
+  "urn:schemas-microsoft-com:time namespace" and javascript events
+- Internal Security Audit
+  - Added checks for invalid heap allocations
+  - Added checks for invalid pointers in ISAPI function calls
+- Added ResponseDropConnection and default enabled
+- improved reading of response file (for large files)
+- Added HTTP compliant url check
+- Added protection against web robots
+  - Block all robots
+  - Block bad robots (with a bot trap)
+  - Block aggressive robots (requests/second)
+  - Denied robot lists (CWebAgents class)
+- Added ScanFilename() function for checking the filename and
+  extension in OnPreprocHeaders (if UseFilenameRawScan is
+  enabled)
+- Monitor access to certain files
+- Added Connection control
+  - Monitor activity of certain IP addresses/ranges
+  - Block access from certain IP addresses/ranges
+  - Limit number of requests coming from single IP address
+- Added OnAuthentication event
+  - Protection against basic authentication brute force
+    attacks / lockout DoS
+  - block common usernames & passwords
+  - Allow- & Blocklist of usernames
+- Compatible with Exchange 2003
+  - Added EnableOutlookMobileAccess()
+  - Added EnableActiveSync()  (Exchange ActiveSync)
+  - Added EnableRPCoverHTTP() (RPC over HTTP Proxy)
+  - By default denied:
+      http methods: "RPC_IN_DATA","RPC_OUT_DATA","X-MS-ENUMATTS"
+      cgi: "rpcproxy.dll"
+- Improved checking of responsestatus + performance boost in change/remove server header in OnSendRawData() with CONTEXT_SENDINGDATA
+- Copied updated CURL class
+- Copied updated CSettings class
+- Config utility 1.3 (see changelog config)
+- Fixed minor bug: "c:\program files\exchange\..." should have
+  been: "c:\program files\exchsrvr\..."
+- fine-tuned EnableOWA(), EnableWebDav() settings (issue with 
+  raw postdata)
+- Logging of HTTP errors: added HTTP_USER_AGENT to log entry
+- Cleaned up default Allow_PATH_List (removed d:\exchange\...) and Deny_HEADER_List (forgot ':')
+- Log HTTP Client Errors is now by default enabled
+- Added Denied User Agents (in OnPreprocHeaders)
+
+
+WebKnight 1.3 (2003.11.10)
+-------------
+- Increased default value of Accept-Language header from 256
+  to 356 to allow requests from Netscape/Mozilla on Mac
+- Fixed minor issue with IE5+SP and IE6 where a response with
+  status "31337" would not be displayed. IE4 & IE5 (with no
+  hotfixes) displays it! Changed default response status to
+  "999"). 
+- Changed SQL injection keyword "char" to "char(" because it
+  produced a lot of false positives in certain situations.
+- Fixed minor bug in OnReadRawData - SQL injection scanning: it
+  also blocked the request when a single keyword was found and not
+  only when two or more are found. Reported by Craig Curtin
+- Copied updated CFileName class
+- Added "<iframe" and "<link" to Denied headers,data,querystring
+- Added URL RFC compliance checking
+- Added check for %00 encoding exploit in url, querystring,
+  cookie, headers & postdata 
+- Added raw querystring scanning (in OnPreprocHeaders)
+- Added raw URL scanning functionality (in OnPreprocHeaders)
+- MaxHeaders: logs first 1024 characters to log file of blocked
+  header instead of maxlength of that header.
+- Added HTTP 0.9 compliance in 'Allowed HTTP Versions'
+  (no http version)
+- Fixed minor bug in UseAllowUrl: it would block uppercase
+  variants of the strings in URL Allowed Starts list.
+- Fixed minor bug where the xml file would get corrupted
+  and WebKnight would use its default settings
+- moved some functions to newly created CURL class
+- Copied updated CLogger class
+  - Added setting logGMT, so you can choose between logging
+    in local time (like in version 1.0 and 1.1) and logging
+    in GMT (like in version 1.2)
+  - Removed #Version directive (confusion with W3C logging)
+
+WebKnight 1.2 (2003.09.08)
+-------------
+- fixed minor bug in changing timezone while running: call _tzset()
+  before GetCurrentTime()
+- fixed minor bug if hack and no response is sent back: reset filtercontext
+- Added feature 'Allowed HTTP Versions' & 'Use Allowed HTTP Versions'
+  for allowing only certain revisions of HTTP
+- fixed minor bug in XML settings: 'Use Allowed Url Starts' instead
+  of 'UseAllowedUrlStarts'
+- fixed major bug in OnReadRawData where the raw data is 0 (rare)
+  and WebKnight would crash and block the request reported by Craig Curtin
+  Many thanks for helping solve the issue.
+- fixed bug in OnReadRawData where the event did not happen if you
+  did not enable scanning of SQL injection or used Denied Sequences
+  in headers or data.
+- Copied updated CSettings class (from general library)
+- Copied updated CLogger class (from general library):
+   - switched to GMT/UTC logging as default
+   - added #Date and #Version directive in logging
+
+WebKnight 1.1 (2003.07.14)
+-------------
+- added "mailform." in Denied Filename
+- Changed filter order in install script (after sspifilt & Compression)
+- when run-time update occurs it is now getting logged
+- Splitted settings in a CSettings (general lib) and CWebKnightSettings class
+- Changed errorhandling for reading the nohack.htm file
+- Added checks on the length of certain log entries
+- Copied updated CLogger class (from general library)
+- Copied updated CLogFile class (from general library)
+- Copied updated CFileName class (from general library)
+- Web Applications:
+	Secured default settings for protecting ASP.NET
+	made EnableASPDotNet()	(also in xml config file)
+	made EnableASP()	(also in xml config file)
+	made EnableStaticHTML()
+
+WebKnight 1.0 (2003.03.24)
+-------------
+- First official release
